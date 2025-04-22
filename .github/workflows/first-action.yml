@@ -1,12 +1,18 @@
-name: Mon Premier Workflow # Nom du workflow
-on:
-  push: # Le workflow s'exécute à chaque push
-  pull_request: # S'exécute aussi lors d'une pull request
+name: Test Python Workflow
+on: [push, pull_request]
 jobs:
-  build:
-    runs-on: ubuntu-latest # Exécuter le job sur Ubuntu
+  test:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout du code
-        uses: actions/checkout@v3 # Récupérer le code du repo
-      - name: Afficher un message
-        run: echo "Hello GitHub Actions !"
+        uses: actions/checkout@v3
+      - name: Installer Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Installer les dépendances
+        run: |
+          pip install pytest
+          pip install -r requirements.txt || true 
+      - name: Exécuter les tests
+        run: pytest
